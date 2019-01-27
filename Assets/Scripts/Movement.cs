@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour
     SpriteRenderer sr;
     Animator anim_H;
     SpriteRenderer sr_H;
+    SpriteRenderer sr_S;
 
     //MOVEMENT VARIABLES=============
     int xVel;
@@ -24,6 +25,8 @@ public class Movement : MonoBehaviour
         sr = this.GetComponent<SpriteRenderer>();
         anim_H = this.transform.GetChild(0).gameObject.GetComponent<Animator>();
         sr_H = this.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+        sr_S = this.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
+
     }
 
     void Update()
@@ -49,6 +52,8 @@ public class Movement : MonoBehaviour
             sr.flipX = true;
             sr_H.flipX = true;
             sr_H.gameObject.transform.localPosition = new Vector3(-0.8F,-0.02F,0);
+            sr_S.flipX = true;
+            sr_S.gameObject.transform.localPosition = new Vector3(0.66F,0.71F,0);
             anim.SetBool("isWalking", true);
         }
         else if (Input.GetKey(KeyCode.D)) {
@@ -56,6 +61,8 @@ public class Movement : MonoBehaviour
             sr.flipX = false;
             sr_H.flipX = false;
             sr_H.gameObject.transform.localPosition = new Vector3(0.8F, -0.02F, 0);
+            sr_S.flipX = false;
+            sr_S.gameObject.transform.localPosition = new Vector3(-0.66F, 0.71F, 0);
             anim.SetBool("isWalking", true);
         }
         else {

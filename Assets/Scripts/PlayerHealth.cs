@@ -26,5 +26,10 @@ public class PlayerHealth : MonoBehaviour
         ShellCanvas shellCanvas = GameObject.FindObjectOfType<ShellCanvas>();
         //update the shell grid. if the health is less then send 0 (no partial shells)
         shellCanvas.shells = shell - 3 > 0 ? shell - 3 : 0;
+
+        if(shellCanvas.shells >= 9)
+        {
+            this.transform.GetChild(1).gameObject.SetActive(true);
+        }
     }
 }
