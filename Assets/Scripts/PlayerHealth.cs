@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField]
-    private int shell = 10;
+    private int shell = 3;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -17,9 +17,14 @@ public class PlayerHealth : MonoBehaviour
         }
         if (collision.CompareTag("SHELL"))
         {
-            shell -= 1;
+            //if you have less than three health ganing a shell will bring you to 4 health
+            shell = shell < 3 ? 4 : shell + 1;
             //DO SOMETHING COOL
             Destroy(collision.gameObject);
         }
+
+        ShellCanvas shellCanvas = GameObject.FindObjectOfType<ShellCanvas>();
+        //update the shell grid. if the health is less then send 0 (no partial shells)
+        shellCanvas.shells = shell - 3 > 0 ? shell - 3 : 0;
     }
 }

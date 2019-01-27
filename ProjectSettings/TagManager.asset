@@ -9,6 +9,7 @@ TagManager:
   - TextManager
   - ENEMYATTACK
   - SHELL
+  - ShellGrid
   layers:
   - Default
   - TransparentFX
