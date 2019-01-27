@@ -17,7 +17,7 @@ public class PlayerHealth : MonoBehaviour
         }
         if (collision.CompareTag("SHELL"))
         {
-            //if you have less than three health ganing a shell will bring you to 4 health
+            //if you have less than three health gaining a shell will bring you to 4 health
             shell = shell < 3 ? 4 : shell + 1;
             //DO SOMETHING COOL
             Destroy(collision.gameObject);
