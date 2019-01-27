@@ -14,7 +14,7 @@ public class Movement : MonoBehaviour
     //MOVEMENT VARIABLES=============
     int xVel;
     int yVel;
-    int speed = 5;
+    int speed = 3;
     bool isMove= false;
 
     void Start()
@@ -79,6 +79,14 @@ public class Movement : MonoBehaviour
         }
         else if (transform.position.y < -5.0F && yVel<0) {
             yVel = 0;
+        }
+        if (transform.position.x > 67.0F && yVel > 0)
+        {
+            xVel = 0;
+        }
+        else if (transform.position.y < -17.0F && yVel < 0)
+        {
+           xVel = 0;
         }
 
         if (isMove)
