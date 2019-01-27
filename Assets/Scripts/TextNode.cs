@@ -48,18 +48,18 @@ public class TextNode : MonoBehaviour
         while (temp<dist)
         {
             if (isLeft)
-                this.transform.position += new Vector3(-0.08F, 0.15F);
+                this.transform.position += new Vector3(-0.1F, 0.15F);
             else {
-                this.transform.position += new Vector3(0.08F, 0.15F);
+                this.transform.position += new Vector3(0.1F, 0.15F);
             }
 
-            temp += 0.5F;
-            if (tmp.fontStyle == FontStyles.Bold)
-                tmp.fontStyle = FontStyles.Normal;
+            temp += 0.2F;
+            if (tmp.fontSize > 10.0F)
+                tmp.fontSize = 8.0F;
             else {
-                tmp.fontStyle = FontStyles.Bold;
+                tmp.fontSize = 12.0F;
             }
-            yield return new WaitForSeconds(0.01F);
+            yield return new WaitForSeconds(0.025F);
         }
         gameObject.SetActive(false);
         yield return null;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public Transform shell;
     Animator anim;
     SpriteRenderer sr;
     GameObject target;
@@ -11,38 +12,54 @@ public class Enemy : MonoBehaviour
     bool isAggressive = false;
 
     bool rando;
-    float speed = 0.01F;
-    float dist = 10.0F;
+    float speed = 0.05F;
+    float dist = 15.0F;
 
     [SerializeField]
     float health = 10.0F;
-    float tempHealth = 10.0F;
-    
+
     void Start()
     {
         sr = this.gameObject.GetComponent<SpriteRenderer>();
+        anim = this.gameObject.GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player");
         rando = (Random.value > 0.5F);
-        isAggressive = rando;
+        isAggressive = true;//rando;
     }
     
     void FixedUpdate()
     {
         //AGGRESSIVE=====================
-        if(canSeePlayer && isAggressive){
+        if(canSeePlayer && isAggressive && health>0){
             if ((this.transform.position - target.transform.position).sqrMagnitude < dist * dist) {
-                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
-                anim.SetBool("isWalking",true);
-                if (transform.position.x < target.transform.position.x)
-                    sr.flipX = false;
-                else {
-                    sr.flipX = true;
+
+                //ATTACK LOGIC==========
+                if ((this.transform.position - target.transform.position).sqrMagnitude < 1.8F)
+                    anim.SetBool("isAttacking", true);
+                else
+                {
+                    anim.SetBool("isAttacking", false);
+                    transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+                    anim.SetBool("isWalking", true);
+                    if (transform.position.x < target.transform.position.x)
+                    {
+                        sr.flipX = false;
+                    }
+                    else
+                    {
+                        sr.flipX = true;
+                    }
                 }
             }
             else {
+                anim.SetBool("isWalking", false);
                 canSeePlayer = false;
-                anim.SetBool("isWalking",false);
             }
+        }
+        else if (health <= 0) {
+            Instantiate(shell, this.transform.position, this.transform.rotation);
+            CameraEffects.instance.Shake(8, 0.1F);
+            Destroy(this.gameObject);
         }
     }
 
@@ -64,6 +81,8 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             canSeePlayer = false;
+            anim.SetBool("isWalking", false);
+            anim.SetBool("isAttacking", false);
         }
     }
     

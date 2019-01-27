@@ -8,6 +8,8 @@ public class Movement : MonoBehaviour
     Animator anim;
     Rigidbody2D rb;
     SpriteRenderer sr;
+    Animator anim_H;
+    SpriteRenderer sr_H;
 
     //MOVEMENT VARIABLES=============
     int xVel;
@@ -20,15 +22,21 @@ public class Movement : MonoBehaviour
         anim = this.GetComponent<Animator>();
         rb = this.GetComponent<Rigidbody2D>();
         sr = this.GetComponent<SpriteRenderer>();
+        anim_H = this.transform.GetChild(0).gameObject.GetComponent<Animator>();
+        sr_H = this.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
     }
-    
+
     void Update()
     {
         //VERTICAL MOVEMENT===============
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W)) {
             yVel = speed;
-        else if (Input.GetKey(KeyCode.S))
+            anim.SetBool("isWalking", true);
+        }
+        else if (Input.GetKey(KeyCode.S)) {
             yVel = -speed;
+            anim.SetBool("isWalking", true);
+        }
         else
         {
             if (yVel != 0)
@@ -39,11 +47,15 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) {
             xVel = -speed;
             sr.flipX = true;
+            sr_H.flipX = true;
+            sr_H.gameObject.transform.localPosition = new Vector3(-0.8F,-0.02F,0);
             anim.SetBool("isWalking", true);
         }
         else if (Input.GetKey(KeyCode.D)) {
             xVel = speed;
             sr.flipX = false;
+            sr_H.flipX = false;
+            sr_H.gameObject.transform.localPosition = new Vector3(0.8F, -0.02F, 0);
             anim.SetBool("isWalking", true);
         }
         else {
@@ -54,14 +66,14 @@ public class Movement : MonoBehaviour
 
         //ATTACKING========================
         if (Input.GetKey(KeyCode.Space))
-            anim.SetBool("isAttacking", true);
+            anim_H.SetBool("isAttacking", true);
         else {
-            anim.SetBool("isAttacking", false);
+            anim_H.SetBool("isAttacking", false);
         }
     }
     private void FixedUpdate()
     {
-        //LEVEL COLLISION
+        //STUPID SIMPLE LEVEL COLLISION
         if (transform.position.y > 5.0F && yVel >0) {
             yVel = 0;
         }
@@ -78,4 +90,5 @@ public class Movement : MonoBehaviour
             isMove = true;
         }
     }
+
 }

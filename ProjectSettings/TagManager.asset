@@ -7,6 +7,8 @@ TagManager:
   - PLAYERFIST
   - Enemy
   - TextManager
+  - ENEMYATTACK
+  - SHELL
   layers:
   - Default
   - TransparentFX
