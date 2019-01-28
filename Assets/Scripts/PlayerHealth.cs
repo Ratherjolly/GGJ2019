@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -33,12 +34,29 @@ public class PlayerHealth : MonoBehaviour
             shell -= 1;
             HITAUDIO.Play();
             CameraEffects.instance.Shake(8, 0.2F);
+            if (shell < 0)
+                EditorSceneManager.LoadScene(3);
         }
         if (collision.CompareTag("SHELL"))
         {
-            shell -= 1;
+            shell += 1;
+            if(shell > 9)
+                EditorSceneManager.LoadScene(2);
             //DO SOMETHING COOL
             pickup.Play();
+            if(!AudioManager.instance.playedFirstShell)
+                AudioManager.instance.playAudio(AUDIO.FIRST_SHELL);
+            else if(!AudioManager.instance.playedRandoOnCollect)
+                AudioManager.instance.playAudio(AUDIO.RANDO_OnCollect);
+            else if(!AudioManager.instance.playedRando_1)
+                AudioManager.instance.playAudio(AUDIO.RANDO_1);
+            else if (!AudioManager.instance.playedRando_2)
+                AudioManager.instance.playAudio(AUDIO.RANDO_2);
+            else if (!AudioManager.instance.playedRando_3)
+                AudioManager.instance.playAudio(AUDIO.RANDO_3);
+            else {
+                //Debug.Log("HERPA DERP DERP DERP");
+            }
             Destroy(collision.gameObject);
         }
     }

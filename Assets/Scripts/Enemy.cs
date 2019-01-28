@@ -12,8 +12,8 @@ public class Enemy : MonoBehaviour
     bool isAggressive = false;
 
     bool rando;
-    float speed = 0.05F;
-    float dist = 15.0F;
+    float speed = 0.03F;
+    float dist = 10.0F;
 
     [SerializeField]
     float health = 5.0F;
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
         {
             health -= 1;
             HITAUDIO.Play();
-            TextManager.instance.callText(this.transform.position, health.ToString()+"/"+maxHealth.ToString());
+            TextManager.instance.callText(this.transform.position, "!");
         }
     }
 

@@ -14,7 +14,8 @@ public class CameraEffects : MonoBehaviour
     private Transform target;
     private float smoothSpeed = 0.0325F;
     private Vector3 offset = new Vector3(0, 0, -10.0F);
-    private bool isFollow;
+    [SerializeField]
+    public bool isFollow = false;
 
     void Awake()
     {
@@ -22,7 +23,6 @@ public class CameraEffects : MonoBehaviour
         cam = this.GetComponent<Camera>();
         originalPos = transform.localPosition;
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        isFollow = true;
     }
 
     // Update is called once per frame
@@ -33,6 +33,12 @@ public class CameraEffects : MonoBehaviour
             Vector3 desiredPosition = target.position + offset;
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);// * Time.deltaTime);
             transform.position = smoothedPosition;
+        }
+        else {
+            if (this.transform.position.x > -16) {
+                this.transform.position -= new Vector3(0.05F,0,0);
+            }
+
         }
     }
 

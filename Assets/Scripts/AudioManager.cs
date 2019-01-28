@@ -34,14 +34,22 @@ public class AudioManager : MonoBehaviour
     private AudioSource RANDO_2;
     private AudioSource RANDO_3;
 
-    private bool playedOpening = false;
-    private bool playedFirstShell = false;
+    [HideInInspector]
+    public bool playedOpening = false;
+    [HideInInspector]
+    public bool playedFirstShell = false;
     private bool playedFirstCrab = false;
     private bool playedFirstKill = false;
-    private bool playedRandoOnCollect = false;
-    private bool playedRando_1 = false;
-    private bool playedRando_2 = false;
-    private bool playedRando_3 = false;
+    [HideInInspector]
+    public bool playedRandoOnCollect = false;
+    [HideInInspector]
+    public bool playedRando_1 = false;
+    [HideInInspector]
+    public bool playedRando_2 = false;
+    [HideInInspector]
+    public bool playedRando_3 = false;
+
+
 
     private void Awake()
     {
@@ -70,44 +78,56 @@ public class AudioManager : MonoBehaviour
         playAudio(AUDIO.OPENING);
     }
 
-
-
     public void playAudio(AUDIO aud) {
-        if(aud==AUDIO.RANDO_OnCollect || aud == AUDIO.RANDO_1 || aud == AUDIO.RANDO_2 || aud == AUDIO.RANDO_3) {
-            if (!OPENING.isPlaying && !FIRST_SHELL.isPlaying && !FIRST_CRAB.isPlaying && !FIRST_KILL.isPlaying && !DIE.isPlaying && !WIN.isPlaying && !ENDING.isPlaying
-                && !RANDO_OnCollect.isPlaying && !RANDO_1.isPlaying && !RANDO_2.isPlaying && !RANDO_3.isPlaying) {
+        if (!GetPlayed(aud))
+        {
+            if (aud == AUDIO.OPENING)
                 StartCoroutine(PLAYAUDIO(aud));
-            }
+            else if (aud == AUDIO.RANDO_OnCollect || aud == AUDIO.RANDO_1 || aud == AUDIO.RANDO_2 || aud == AUDIO.RANDO_3)
+            {
+                if (!OPENING.isPlaying && !FIRST_SHELL.isPlaying && !FIRST_CRAB.isPlaying && !FIRST_KILL.isPlaying && !DIE.isPlaying && !WIN.isPlaying && !ENDING.isPlaying
+                    && !RANDO_OnCollect.isPlaying && !RANDO_1.isPlaying && !RANDO_2.isPlaying && !RANDO_3.isPlaying)
+                {
+                    if (aud == AUDIO.RANDO_OnCollect && playedFirstShell == true)
+                        StartCoroutine(PLAYAUDIO(aud));
+                    else if (aud != AUDIO.RANDO_OnCollect)
+                        StartCoroutine(PLAYAUDIO(aud));
+                }
 
-        }
-        else if(!GetPlayed(aud)){
-            StartCoroutine(PLAYAUDIO(aud));
+            }
+            else
+            {
+                if (!OPENING.isPlaying && !FIRST_SHELL.isPlaying && !FIRST_CRAB.isPlaying && !FIRST_KILL.isPlaying && !DIE.isPlaying && !WIN.isPlaying && !ENDING.isPlaying)
+                {
+                    StartCoroutine(PLAYAUDIO(aud));
+                }
+            }
         }
     }
 
     private void STOPAUDIO() {
         if (OPENING.isPlaying)
-            OPENING.Stop();
+            OPENING.Pause();
         if (FIRST_SHELL.isPlaying)
-            FIRST_SHELL.Stop();
+            FIRST_SHELL.Pause();
         if (FIRST_CRAB.isPlaying)
-            FIRST_CRAB.Stop();
+            FIRST_CRAB.Pause();
         if (FIRST_KILL.isPlaying)
-            FIRST_KILL.Stop();
+            FIRST_KILL.Pause();
         if (DIE.isPlaying)
-            DIE.Stop();
+            DIE.Pause();
         if (WIN.isPlaying)
-            WIN.Stop();
+            WIN.Pause();
         if (ENDING.isPlaying)
-            ENDING.Stop();
+            ENDING.Pause();
         if (RANDO_OnCollect.isPlaying)
-            RANDO_OnCollect.Stop();
+            RANDO_OnCollect.Pause();
         if (RANDO_1.isPlaying)
-            RANDO_1.Stop();
+            RANDO_1.Pause();
         if (RANDO_2.isPlaying)
-            RANDO_2.Stop();
+            RANDO_2.Pause();
         if (RANDO_3.isPlaying)
-            RANDO_3.Stop();
+            RANDO_3.Pause();
 
     }
 
@@ -169,7 +189,8 @@ public class AudioManager : MonoBehaviour
             yield return null;
         temp.Play();
             yield return null;
-        SETAUDIOBOOL(aud,true);
+        //if(aud != AUDIO.OPENING)
+            //SETAUDIOBOOL(aud,true);
             yield return null;
         setMusic(0.2F);
             yield return null;
@@ -178,6 +199,9 @@ public class AudioManager : MonoBehaviour
             yield return new WaitForSeconds(0.1F);
         }
         setMusic(0.5F);
+        //if(aud == AUDIO.OPENING)
+            SETAUDIOBOOL(aud, true);
+
         yield return null;
     }
 
@@ -185,6 +209,7 @@ public class AudioManager : MonoBehaviour
     {
         if (aud == AUDIO.OPENING)
         {
+            CameraEffects.instance.isFollow = true;
             playedOpening = setBool;
         }
         else if (aud == AUDIO.FIRST_SHELL)
