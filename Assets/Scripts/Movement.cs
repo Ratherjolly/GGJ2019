@@ -16,27 +16,42 @@ public class Movement : MonoBehaviour
     int yVel;
     int speed = 3;
     bool isMove = false;
+    [HideInInspector]
+    public int EnemyCount = 0;
+    public static Movement instance;
+    public Transform enemyT;
 
-    void Start()
+    void Awake()
     {
+        instance = this;
         anim = this.GetComponent<Animator>();
         rb = this.GetComponent<Rigidbody2D>();
         sr = this.GetComponent<SpriteRenderer>();
         anim_H = this.transform.GetChild(0).gameObject.GetComponent<Animator>();
         sr_H = this.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+        EnemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
 
     void Update()
     {
-        if (AudioManager.instance.playedOpening)
+        if (AudioManager.instance.playedOpening && !AudioManager.instance.isPlayingEnd)
         {
+            if(EnemyCount==0)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Instantiate(enemyT, new Vector3(Random.Range(-50, 650) * 0.1F, -15, 0), this.transform.rotation);
+                }
+                EnemyCount += 10;
+            }
+
             //VERTICAL MOVEMENT===============
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             {
                 yVel = speed;
                 anim.SetBool("isWalking", true);
             }
-            else if (Input.GetKey(KeyCode.S))
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             {
                 yVel = -speed;
                 anim.SetBool("isWalking", true);
@@ -50,7 +65,7 @@ public class Movement : MonoBehaviour
             }
 
             //HORIZONTAL MOVEMENT=============
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
                 xVel = -speed;
                 sr.flipX = true;
@@ -58,7 +73,7 @@ public class Movement : MonoBehaviour
                 sr_H.gameObject.transform.localPosition = new Vector3(-0.8F, -0.02F, 0);
                 anim.SetBool("isWalking", true);
             }
-            else if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
                 xVel = speed;
                 sr.flipX = false;
@@ -80,52 +95,64 @@ public class Movement : MonoBehaviour
             if (Input.GetKey(KeyCode.Space))
             {
                 anim_H.SetBool("isAttacking", true);
-                AudioManager.instance.playAudio(AUDIO.RANDO_1);
             }
             else
             {
                 anim_H.SetBool("isAttacking", false);
             }
         }
-        
+        else {
+            if(anim_H.GetBool("isAttacking"))
+                anim_H.SetBool("isAttacking",false);
+            if (anim.GetBool("isWalking"))
+                anim.SetBool("isWalking", false);
+
+        }
+
     }
     void FixedUpdate()
     {
-        //STUPID SIMPLE LEVEL COLLISION
-        if (transform.position.y > 5.0F && yVel > 0)
+        if (AudioManager.instance.playedOpening && !AudioManager.instance.isPlayingEnd)
         {
-            yVel = 0;
-        }
-        else if (transform.position.y < -5.0F && yVel < 0)
-        {
-            yVel = 0;
-        }
-
-        if (transform.position.x > 67.0F && xVel > 0)
-        {
-            xVel = 0;
-        }
-        else if (transform.position.x < -17.0F && xVel < 0)
-        {
-            xVel = 0;
-        }
-
-        if (isMove)
-            rb.velocity = new Vector2(xVel, yVel);
-
-        if (xVel == 0 && yVel == 0)
-        {
-            if (isMove != false)
+            //STUPID SIMPLE LEVEL COLLISION
+            if (transform.position.y > 4.25F && yVel > 0)
             {
-                isMove = false;
+                yVel = 0;
+            }
+            else if (transform.position.y < -5.0F && yVel < 0)
+            {
+                yVel = 0;
+            }
+
+            if (transform.position.x > 67.0F && xVel > 0)
+            {
+                xVel = 0;
+            }
+            else if (transform.position.x < -17.0F && xVel < 0)
+            {
+                xVel = 0;
+            }
+
+            if (isMove)
+                rb.velocity = new Vector2(xVel, yVel);
+
+            if (xVel == 0 && yVel == 0)
+            {
+                if (isMove != false)
+                {
+                    isMove = false;
+                }
+            }
+            else
+            {
+                if (!isMove)
+                {
+                    isMove = true;
+                }
             }
         }
-        else
-        {
-            if (!isMove)
-            {
-                isMove = true;
-            }
+        else {
+            rb.velocity = new Vector2(0, 0);
         }
     }
 }

@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField]
-    private int shell = 10;
+    private int shell = 0;
 
     private AudioSource HITAUDIO;
 
@@ -15,7 +15,6 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource Step3_AUDIO;
     private AudioSource pickup;
 
-
     private void Awake()
     {
         HITAUDIO = this.transform.GetChild(0).gameObject.GetComponent<AudioSource>();
@@ -23,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
         Step2_AUDIO = this.transform.GetChild(2).gameObject.GetComponent<AudioSource>();
         Step3_AUDIO = this.transform.GetChild(3).gameObject.GetComponent<AudioSource>();
         pickup = this.transform.GetChild(4).gameObject.GetComponent<AudioSource>();
-
+        shell = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -34,28 +33,36 @@ public class PlayerHealth : MonoBehaviour
             shell -= 1;
             HITAUDIO.Play();
             CameraEffects.instance.Shake(8, 0.2F);
-            if (shell < 0)
-                EditorSceneManager.LoadScene(3);
+
+            if (shell < 0) {
+                AudioManager.instance.playAudio(AUDIO.DIE);
+            }
         }
-        if (collision.CompareTag("SHELL"))
+        else if (collision.CompareTag("SHELL"))
         {
             shell += 1;
-            if(shell > 9)
-                EditorSceneManager.LoadScene(2);
             //DO SOMETHING COOL
             pickup.Play();
-            if(!AudioManager.instance.playedFirstShell)
-                AudioManager.instance.playAudio(AUDIO.FIRST_SHELL);
-            else if(!AudioManager.instance.playedRandoOnCollect)
-                AudioManager.instance.playAudio(AUDIO.RANDO_OnCollect);
-            else if(!AudioManager.instance.playedRando_1)
-                AudioManager.instance.playAudio(AUDIO.RANDO_1);
-            else if (!AudioManager.instance.playedRando_2)
-                AudioManager.instance.playAudio(AUDIO.RANDO_2);
-            else if (!AudioManager.instance.playedRando_3)
-                AudioManager.instance.playAudio(AUDIO.RANDO_3);
-            else {
-                //Debug.Log("HERPA DERP DERP DERP");
+
+            if (shell >= 9) {
+                AudioManager.instance.playAudio(AUDIO.ENDING);
+            }
+            else
+            {
+                if (!AudioManager.instance.playedFirstShell)
+                    AudioManager.instance.playAudio(AUDIO.FIRST_SHELL);
+                else if (!AudioManager.instance.playedRandoOnCollect)
+                    AudioManager.instance.playAudio(AUDIO.RANDO_OnCollect);
+                else if (!AudioManager.instance.playedRando_1)
+                    AudioManager.instance.playAudio(AUDIO.RANDO_1);
+                else if (!AudioManager.instance.playedRando_2)
+                    AudioManager.instance.playAudio(AUDIO.RANDO_2);
+                else if (!AudioManager.instance.playedRando_3)
+                    AudioManager.instance.playAudio(AUDIO.RANDO_3);
+                else
+                {
+                    //Debug.Log("HERPA DERP DERP DERP");
+                }
             }
             Destroy(collision.gameObject);
         }

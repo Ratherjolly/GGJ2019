@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class CameraEffects : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class CameraEffects : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (isFollow)
@@ -35,8 +35,11 @@ public class CameraEffects : MonoBehaviour
             transform.position = smoothedPosition;
         }
         else {
-            if (this.transform.position.x > -16) {
-                this.transform.position -= new Vector3(0.05F,0,0);
+            if (EditorSceneManager.GetActiveScene().buildIndex == 1)
+            {
+                if (this.transform.position.x > -16) {
+                    this.transform.position -= new Vector3(0.05F, 0, 0);
+                }
             }
 
         }
