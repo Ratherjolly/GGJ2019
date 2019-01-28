@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public enum AUDIO {
@@ -85,37 +84,42 @@ public class AudioManager : MonoBehaviour
         if (!GetPlayed(aud))
         {
             if (aud == AUDIO.OPENING)
-                StartCoroutine(PLAYAUDIO(aud));
-
-
+                StartCoroutine(PLAYAUDIO(aud,0));
+            else if (aud == AUDIO.ENDING)
+            {
+                isPlayingEnd = true;
+                StartCoroutine(PLAYAUDIO(aud,2.0F));
+            }
+            else if (isPlayingEnd != true)
+            {
                 if (!OPENING.isPlaying && !FIRST_SHELL.isPlaying && !FIRST_CRAB.isPlaying && !FIRST_KILL.isPlaying && !DIE.isPlaying && !WIN.isPlaying && !ENDING.isPlaying)
                 {
-                    StartCoroutine(PLAYAUDIO(aud));
+                    StartCoroutine(PLAYAUDIO(aud,0));
                 }
                 else if (aud == AUDIO.FIRST_KILL && (FIRST_CRAB.isPlaying || FIRST_SHELL.isPlaying))
-                    StartCoroutine(PLAYAUDIO(aud));
+                    StartCoroutine(PLAYAUDIO(aud, 0));
                 else if (aud == AUDIO.FIRST_CRAB && FIRST_SHELL.isPlaying)
-                    StartCoroutine(PLAYAUDIO(aud));
+                    StartCoroutine(PLAYAUDIO(aud, 0));
                 else if (aud == AUDIO.FIRST_KILL)
-                    StartCoroutine(PLAYAUDIO(aud));
+                    StartCoroutine(PLAYAUDIO(aud, 0));
                 else if (aud == AUDIO.RANDO_OnCollect || aud == AUDIO.RANDO_1 || aud == AUDIO.RANDO_2 || aud == AUDIO.RANDO_3)
                 {
                     if (!OPENING.isPlaying && !FIRST_SHELL.isPlaying && !FIRST_CRAB.isPlaying && !FIRST_KILL.isPlaying && !DIE.isPlaying && !WIN.isPlaying && !ENDING.isPlaying
                         && !RANDO_OnCollect.isPlaying && !RANDO_1.isPlaying && !RANDO_2.isPlaying && !RANDO_3.isPlaying)
                     {
                         if (aud == AUDIO.RANDO_OnCollect && playedFirstShell == true)
-                            StartCoroutine(PLAYAUDIO(aud));
+                            StartCoroutine(PLAYAUDIO(aud, 0));
                         else if (aud == AUDIO.FIRST_KILL) //&& (FIRST_CRAB.isPlaying || FIRST_SHELL.isPlaying))
-                            StartCoroutine(PLAYAUDIO(aud));
+                            StartCoroutine(PLAYAUDIO(aud, 0));
                         else if (aud != AUDIO.RANDO_OnCollect)
-                            StartCoroutine(PLAYAUDIO(aud));
+                            StartCoroutine(PLAYAUDIO(aud, 0));
                     }
                     else
                     {
                         //DON'T PLAY RANDOM
                     }
                 }
-
+            }
         }
     }
 
@@ -196,7 +200,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PLAYAUDIO(AUDIO aud) {
+    private IEnumerator PLAYAUDIO(AUDIO aud,float delay) {
+        if (delay > 0)
+            yield return new WaitForSeconds(delay);
         if (aud == AUDIO.DIE || aud == AUDIO.ENDING)
             isPlayingEnd = true;
 
@@ -219,9 +225,9 @@ public class AudioManager : MonoBehaviour
         //if(aud == AUDIO.OPENING)
             SETAUDIOBOOL(aud, true);
         if(isPlayingEnd && aud == AUDIO.DIE)
-            EditorSceneManager.LoadScene(3);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(3);
         else if (isPlayingEnd && aud == AUDIO.ENDING)
-            EditorSceneManager.LoadScene(2);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
 
         yield return null;
     }

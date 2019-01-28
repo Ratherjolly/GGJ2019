@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
 
 
 public class MainMenu : MonoBehaviour
@@ -12,14 +11,17 @@ public class MainMenu : MonoBehaviour
     {
 
         if (Input.GetKeyUp(KeyCode.Space)){
-            if (EditorSceneManager.GetActiveScene().buildIndex == 0)
-                EditorSceneManager.LoadScene(1);
-            else if (EditorSceneManager.GetActiveScene().buildIndex == 2)
-                EditorSceneManager.LoadScene(0);
-            else if (EditorSceneManager.GetActiveScene().buildIndex == 3)
-                EditorSceneManager.LoadScene(0);
-            else if (EditorSceneManager.GetActiveScene().buildIndex == 4)
-                EditorSceneManager.LoadScene(0);
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 0)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 2)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 3)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 4)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
+        //else if(Input.GetKey(KeyCode.E)&& Input.GetKey(KeyCode.X)&& Input.GetKey(KeyCode.I)&& Input.GetKey(KeyCode.T)){
+        //    Application.Quit();
+        //}
     }
 }
